@@ -1,6 +1,6 @@
 let escaneado = false;
 
-const API_URL = "https://script.google.com/macros/s/XXXXX/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxVsk37ktR2baptg0YCBgQKqZn1Vcyep5mQHVM5h9_kSWYw1Vxaj4d8OoZ-PDThXztO/exec";
 
 // 🔊 sonido
 const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
