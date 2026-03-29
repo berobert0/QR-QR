@@ -1,7 +1,7 @@
 let escaneado = false;
 
 // 🔥 PEGA TU URL AQUÍ
-const API_URL = "https://script.google.com/macros/s/AKfycbz7uRYTfYTmvpcZ_nqCXPicvPSxbvMCLMN0zSWqd2u206FVMfpOE3e-5JuihGttLBTnXg/exec";
+const API_URL = "https://script.google.com/macros/s/XXXXX/exec";
 
 window.onload = iniciar;
 
