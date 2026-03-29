@@ -1,7 +1,9 @@
 let escaneado = false;
 
-// 🔥 PEGA TU URL AQUÍ
-const API_URL = "https://script.google.com/macros/s/AKfycbz7uRYTfYTmvpcZ_nqCXPicvPSxbvMCLMN0zSWqd2u206FVMfpOE3e-5JuihGttLBTnXg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbySEBUkBSjSlpnRTL5h54OQjwcvKZFprurDSMhBILYqc_FpdihEAYLH8Kk3Jk_plUprig/exec";
+
+// 🔊 sonido
+const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
 
 window.onload = iniciar;
 
@@ -11,40 +13,62 @@ function iniciar(){
 
   Html5Qrcode.getCameras().then(devices => {
 
-    if(devices.length === 0){
-      document.getElementById("mensaje").innerHTML = "❌ No hay cámara";
-      return;
-    }
+    let camara = devices[devices.length - 1];
 
-    let camara = devices.find(d =>
-      d.label.toLowerCase().includes("back")
-    ) || devices[devices.length - 1];
+    qr.start(camara.id,{fps:10,qrbox:250},(texto)=>{
 
-    qr.start(
-      camara.id,
-      { fps:10, qrbox:250 },
-      (texto) => {
+      if(escaneado) return;
+      escaneado = true;
 
-        if(escaneado) return;
-        escaneado = true;
+      // 🔊 sonido
+      audio.play();
 
-        document.getElementById("mensaje").innerHTML = "⏳ Registrando...";
-
-        fetch(API_URL + "?codigo=" + texto)
-        .then(r=>r.text())
-        .then(data=>{
-          document.getElementById("mensaje").innerHTML = data;
-          setTimeout(()=> escaneado=false, 3000);
-        })
-        .catch(()=>{
-          document.getElementById("mensaje").innerHTML = "❌ Error conexión";
-          escaneado=false;
-        });
-
+      // 📳 vibración
+      if(navigator.vibrate){
+        navigator.vibrate(200);
       }
-    );
 
-  }).catch(()=>{
-    document.getElementById("mensaje").innerHTML = "❌ Permiso denegado";
+      fetch(API_URL + "?codigo=" + texto)
+      .then(r=>r.json())
+      .then(data=>{
+
+        document.getElementById("nombre").innerHTML = data.nombre;
+
+        let estado = document.getElementById("estado");
+
+        if(data.estado === "ASISTENCIA"){
+          estado.innerHTML = "🟢 ASISTENCIA";
+          estado.style.color="#22c55e";
+        }
+        else if(data.estado === "TARDANZA"){
+          estado.innerHTML = "🟡 TARDANZA";
+          estado.style.color="#facc15";
+        }
+        else if(data.estado === "FALTA"){
+          estado.innerHTML = "🔴 FALTA";
+          estado.style.color="#ef4444";
+        }
+        else{
+          estado.innerHTML = "⚠️ YA MARCÓ HOY";
+          estado.style.color="#f97316";
+        }
+
+        // 🖼️ FOTO
+        const foto = document.getElementById("foto");
+
+        if(data.foto){
+          foto.src = data.foto;
+          foto.style.display = "block";
+        }else{
+          foto.style.display = "none";
+        }
+
+        setTimeout(()=> escaneado=false, 3000);
+
+      });
+
+    });
+
   });
+
 }
