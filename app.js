@@ -1,6 +1,6 @@
 let escaneado = false;
 
-const API_URL = "https://script.google.com/macros/s/AKfycbySEBUkBSjSlpnRTL5h54OQjwcvKZFprurDSMhBILYqc_FpdihEAYLH8Kk3Jk_plUprig/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbw0Re2cbMyLQPY96vJ6avJkS0sWkd4lf1zXkUh0Ew-m-5oeK1h6ChQ-JwwJYjrMlVUyOg/exec";
 
 // 🔊 sonido
 const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
