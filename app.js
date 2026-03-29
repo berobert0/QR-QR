@@ -1,5 +1,8 @@
 let escaneado = false;
-const API_URL = "https://script.google.com/macros/s/AKfycbxBCQXgS1zMqGgsnXonAnNhfMSxJfCLC0D9HggetywaqjXsRJQbeqz8tIvb3H2w4J36Jg/exec";
+
+// 🔥 PEGA TU URL AQUÍ
+const API_URL = "https://script.google.com/macros/s/AKfycbz7uRYTfYTmvpcZ_nqCXPicvPSxbvMCLMN0zSWqd2u206FVMfpOE3e-5JuihGttLBTnXg/exec";
+
 window.onload = iniciar;
 
 function iniciar(){
@@ -13,7 +16,9 @@ function iniciar(){
       return;
     }
 
-    let camara = devices[devices.length - 1];
+    let camara = devices.find(d =>
+      d.label.toLowerCase().includes("back")
+    ) || devices[devices.length - 1];
 
     qr.start(
       camara.id,
@@ -25,18 +30,17 @@ function iniciar(){
 
         document.getElementById("mensaje").innerHTML = "⏳ Registrando...";
 
-fetch(API_URL + "?codigo=" + texto)
-.then(r=>r.text())
-.then(data=>{
-  document.getElementById("mensaje").innerHTML = data;
-  setTimeout(()=> escaneado=false, 3000);
-})
-.catch(()=>{
-  document.getElementById("mensaje").innerHTML = "❌ Error conexión";
-  escaneado=false;
-});
+        fetch(API_URL + "?codigo=" + texto)
+        .then(r=>r.text())
+        .then(data=>{
+          document.getElementById("mensaje").innerHTML = data;
+          setTimeout(()=> escaneado=false, 3000);
+        })
+        .catch(()=>{
+          document.getElementById("mensaje").innerHTML = "❌ Error conexión";
+          escaneado=false;
+        });
 
-        setTimeout(()=> escaneado=false, 3000);
       }
     );
 
