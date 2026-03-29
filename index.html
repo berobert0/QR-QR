@@ -1,49 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+body{
+  margin:0;
+  background:#0f172a;
+  color:#fff;
+  font-family:'Segoe UI';
+  text-align:center;
+}
+
+/* HEADER */
+.header{
+  background:#1e293b;
+  padding:12px;
+  font-size:16px;
+}
+
+/* ESCÁNER */
+#reader{
+  width:280px;
+  margin:15px auto;
+  border-radius:12px;
+  border:3px solid #22c55e;
+}
+
+/* PANEL */
+.panel{
+  background:#111827;
+  margin:10px;
+  padding:15px;
+  border-radius:12px;
+}
+
+/* FOTO */
+.foto{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid #fff;
+  display:none;
+}
+
+/* TEXTO */
+.nombre{
+  font-size:18px;
+  margin-top:10px;
+}
+
+.estado{
+  font-size:22px;
+  margin-top:8px;
+  font-weight:bold;
+}
+
+.mensaje{
+  margin-top:5px;
+}
+</style>
 </head>
 
-<body style="background:black;color:white;text-align:center">
+<body>
 
-<h2>ESCANEAR QR</h2>
+<div class="header">
+📚 3ro C - Control de Asistencia  
+<br>🕒 7:40 - 12:20
+</div>
 
-<div id="reader" style="width:300px;margin:auto"></div>
+<div id="reader"></div>
 
-<h3 id="msg"></h3>
+<div class="panel">
+  <img id="foto" class="foto">
+  <div id="nombre" class="nombre"></div>
+  <div id="estado" class="estado"></div>
+  <div id="mensaje" class="mensaje"></div>
+</div>
 
-<script>
-
-const API="https://script.google.com/macros/s/AKfycbx_ethoefYVN_MxrRuf1LGsZSoFDwJ_zuIIqK0k-m6aX3nwvHTl1PurP8mDFOgr-WE-EA/exec";
-
-let bloqueado=false;
-
-const qr=new Html5Qrcode("reader");
-
-qr.start(
-{facingMode:"environment"},
-{fps:10,qrbox:250},
-(texto)=>{
-
-if(bloqueado) return;
-bloqueado=true;
-
-navigator.vibrate?.(200);
-
-fetch(API+"?codigo="+texto)
-.then(r=>r.json())
-.then(d=>{
-document.getElementById("msg").innerHTML =
-d.nombre+" - "+d.estado;
-
-setTimeout(()=>bloqueado=false,3000);
-});
-
-}
-);
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
