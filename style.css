@@ -1,0 +1,16 @@
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  text-align:center;
+  font-family:Arial;
+}
+
+#reader{
+  width:100%;
+  height:80vh;
+}
+
+#mensaje{
+  font-size:18px;
+}
