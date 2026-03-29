@@ -1,76 +1,49 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Asistencia QR PRO</title>
-
 <script src="https://unpkg.com/html5-qrcode"></script>
-
-<style>
-body{
-  margin:0;
-  background:#0f172a;
-  color:#fff;
-  font-family:'Segoe UI';
-  text-align:center;
-}
-
-.header{
-  padding:10px;
-  background:#1e293b;
-}
-
-#reader{
-  width:90%;
-  max-width:320px;
-  margin:15px auto;
-  border:3px solid #22c55e;
-  border-radius:12px;
-}
-
-/* FOTO */
-.foto{
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  object-fit:cover;
-  margin:10px auto;
-  border:3px solid #fff;
-}
-
-/* PANEL */
-.panel{
-  background:#111827;
-  margin:10px;
-  padding:15px;
-  border-radius:12px;
-}
-
-.nombre{
-  font-size:18px;
-  font-weight:bold;
-}
-
-.estado{
-  font-size:22px;
-  margin-top:10px;
-}
-</style>
 </head>
 
-<body>
+<body style="background:black;color:white;text-align:center">
 
-<div class="header">📷 Asistencia 3ro C</div>
+<h2>ESCANEAR QR</h2>
 
-<div id="reader"></div>
+<div id="reader" style="width:300px;margin:auto"></div>
 
-<div class="panel">
-  <img id="foto" class="foto" src="" style="display:none;">
-  <div id="nombre" class="nombre"></div>
-  <div id="estado" class="estado"></div>
-</div>
+<h3 id="msg"></h3>
 
-<script src="app.js"></script>
+<script>
+
+const API="https://script.google.com/macros/s/XXXXX/exec";
+
+let bloqueado=false;
+
+const qr=new Html5Qrcode("reader");
+
+qr.start(
+{facingMode:"environment"},
+{fps:10,qrbox:250},
+(texto)=>{
+
+if(bloqueado) return;
+bloqueado=true;
+
+navigator.vibrate?.(200);
+
+fetch(API+"?codigo="+texto)
+.then(r=>r.json())
+.then(d=>{
+document.getElementById("msg").innerHTML =
+d.nombre+" - "+d.estado;
+
+setTimeout(()=>bloqueado=false,3000);
+});
+
+}
+);
+
+</script>
 
 </body>
 </html>
