@@ -1,74 +1,41 @@
-let escaneado = false;
+const API_URL = "https://script.google.com/macros/s/AKfycbxVsk37ktR2baptg0YCBgQKqZn1Vcyep5mQHVM5h9_kSWYw1Vxaj4d8OoZ-PDThXztO/exec";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbx3xENlRiz3uSr6E12afkENXmS1-7exuOCBp_AkicQ-CzBLe8l9U-FcvLUdTVjqz1QUZg/exec";
+function cargar(){
 
-// 🔊 sonido
-const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+  fetch(API_URL + "?tipo=panel")
+  .then(r=>r.json())
+  .then(data=>{
 
-window.onload = iniciar;
+    let html = "";
 
-function iniciar(){
+    data.reverse().forEach(d=>{
 
-  const qr = new Html5Qrcode("reader");
+      let clase = "";
 
-  Html5Qrcode.getCameras().then(devices => {
+      if(d.estado.includes("ASISTENCIA")) clase="asistencia";
+      else if(d.estado.includes("TARDANZA")) clase="tardanza";
+      else if(d.estado.includes("FALTA")) clase="falta";
+      else if(d.estado.includes("DUPLICADO")) clase="duplicado";
 
-    let camara = devices[devices.length - 1];
-
-    qr.start(camara.id,{fps:10,qrbox:250},(texto)=>{
-
-      if(escaneado) return;
-      escaneado = true;
-
-      // 🔊 sonido
-      audio.play();
-
-      // 📳 vibración
-      if(navigator.vibrate){
-        navigator.vibrate(200);
-      }
-
-      fetch(API_URL + "?codigo=" + texto)
-      .then(r=>r.json())
-      .then(data=>{
-
-        document.getElementById("nombre").innerHTML = data.nombre;
-
-        let estado = document.getElementById("estado");
-
-        if(data.estado === "ASISTENCIA"){
-          estado.innerHTML = "🟢 ASISTENCIA";
-          estado.style.color="#22c55e";
-        }
-        else if(data.estado === "TARDANZA"){
-          estado.innerHTML = "🟡 TARDANZA";
-          estado.style.color="#facc15";
-        }
-        else if(data.estado === "FALTA"){
-          estado.innerHTML = "🔴 FALTA";
-          estado.style.color="#ef4444";
-        }
-        else{
-          estado.innerHTML = "⚠️ YA MARCÓ HOY";
-          estado.style.color="#f97316";
-        }
-
-        // 🖼️ FOTO
-        const foto = document.getElementById("foto");
-
-        if(data.foto){
-          foto.src = data.foto;
-          foto.style.display = "block";
-        }else{
-          foto.style.display = "none";
-        }
-
-        setTimeout(()=> escaneado=false, 3000);
-
-      });
-
+      html += `
+      <tr>
+        <td>${d.codigo}</td>
+        <td>${d.nombre}</td>
+        <td>${d.fecha}</td>
+        <td>${d.hora}</td>
+        <td class="${clase}">${d.estado}</td>
+      </tr>`;
     });
 
-  });
+    document.getElementById("tabla").innerHTML = html;
 
+  })
+  .catch(()=>{
+    alert("Error conexión con Apps Script");
+  });
 }
+
+// 🔥 AUTO ACTUALIZA
+setInterval(cargar, 5000);
+
+cargar();
