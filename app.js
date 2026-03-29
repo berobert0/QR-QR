@@ -1,41 +1,35 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxVsk37ktR2baptg0YCBgQKqZn1Vcyep5mQHVM5h9_kSWYw1Vxaj4d8OoZ-PDThXztO/exec";
+let escaneado = false;
 
-function cargar(){
+window.onload = iniciar;
 
-  fetch(API_URL + "?tipo=panel")
-  .then(r=>r.json())
-  .then(data=>{
+function iniciar(){
 
-    let html = "";
+  const qr = new Html5Qrcode("reader");
 
-    data.reverse().forEach(d=>{
+  Html5Qrcode.getCameras().then(devices => {
 
-      let clase = "";
+    if(devices.length === 0){
+      document.getElementById("mensaje").innerHTML = "❌ No hay cámara";
+      return;
+    }
 
-      if(d.estado.includes("ASISTENCIA")) clase="asistencia";
-      else if(d.estado.includes("TARDANZA")) clase="tardanza";
-      else if(d.estado.includes("FALTA")) clase="falta";
-      else if(d.estado.includes("DUPLICADO")) clase="duplicado";
+    let camara = devices[devices.length - 1];
 
-      html += `
-      <tr>
-        <td>${d.codigo}</td>
-        <td>${d.nombre}</td>
-        <td>${d.fecha}</td>
-        <td>${d.hora}</td>
-        <td class="${clase}">${d.estado}</td>
-      </tr>`;
-    });
+    qr.start(
+      camara.id,
+      { fps:10, qrbox:250 },
+      (texto) => {
 
-    document.getElementById("tabla").innerHTML = html;
+        if(escaneado) return;
+        escaneado = true;
 
-  })
-  .catch(()=>{
-    alert("Error conexión con Apps Script");
+        document.getElementById("mensaje").innerHTML = "QR detectado: " + texto;
+
+        setTimeout(()=> escaneado=false, 3000);
+      }
+    );
+
+  }).catch(()=>{
+    document.getElementById("mensaje").innerHTML = "❌ Permiso denegado";
   });
 }
-
-// 🔥 AUTO ACTUALIZA
-setInterval(cargar, 5000);
-
-cargar();
