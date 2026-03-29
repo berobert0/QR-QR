@@ -1,5 +1,5 @@
 let escaneado = false;
-
+const API_URL = "https://script.google.com/macros/s/AKfycbxBCQXgS1zMqGgsnXonAnNhfMSxJfCLC0D9HggetywaqjXsRJQbeqz8tIvb3H2w4J36Jg/exec";
 window.onload = iniciar;
 
 function iniciar(){
@@ -23,7 +23,18 @@ function iniciar(){
         if(escaneado) return;
         escaneado = true;
 
-        document.getElementById("mensaje").innerHTML = "QR detectado: " + texto;
+        document.getElementById("mensaje").innerHTML = "⏳ Registrando...";
+
+fetch(API_URL + "?codigo=" + texto)
+.then(r=>r.text())
+.then(data=>{
+  document.getElementById("mensaje").innerHTML = data;
+  setTimeout(()=> escaneado=false, 3000);
+})
+.catch(()=>{
+  document.getElementById("mensaje").innerHTML = "❌ Error conexión";
+  escaneado=false;
+});
 
         setTimeout(()=> escaneado=false, 3000);
       }
