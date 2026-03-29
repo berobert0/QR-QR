@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Profesor</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:#0f172a;
+  color:#fff;
+  text-align:center;
+}
+
+h2{
+  margin:15px;
+}
+
+table{
+  width:95%;
+  margin:auto;
+  border-collapse:collapse;
+}
+
+th{
+  background:#1e293b;
+  padding:10px;
+}
+
+td{
+  padding:8px;
+  border-bottom:1px solid #333;
+}
+
+.asistencia{color:#22c55e;}
+.tardanza{color:#facc15;}
+.falta{color:#ef4444;}
+</style>
+</head>
+
+<body>
+
+<h2>📊 Panel de Asistencia - 3ro C</h2>
+
+<button onclick="cargar()">🔄 Actualizar</button>
+
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Nombre</th>
+<th>Fecha</th>
+<th>Hora</th>
+<th>Estado</th>
+</tr>
+</thead>
+
+<tbody id="tabla"></tbody>
+</table>
+
+<script src="panel.js"></script>
+
+</body>
+</html>
