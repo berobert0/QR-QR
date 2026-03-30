@@ -1,41 +1,65 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxFSF6LFpaIOSoR3AUAYKqIV1lxG5Wz5b5lLMFRZQLi_HoXFrnslQgUffyNMJe03PZRYw/exec";
+const API="https://script.google.com/macros/s/AKfycbzATWa2odLGXc8j_92SWX3RShyDXCyI8Nx8CqVl-LjU0MRrGPEqf-kGsrEIt8yEmgIuWg/exec";
 
-function cargar(){
+let bloqueado=false;
 
-  fetch(API_URL + "?tipo=panel")
-  .then(r=>r.json())
-  .then(data=>{
+const sonido=new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=sharing");
 
-    let html = "";
+const qr=new Html5Qrcode("reader");
 
-    data.reverse().forEach(d=>{
+qr.start(
+{facingMode:"environment"},
+{fps:10,qrbox:200},
+(texto)=>{
 
-      let clase = "";
+if(bloqueado) return;
+bloqueado=true;
 
-      if(d.estado === "ASISTENCIA") clase="asistencia";
-      else if(d.estado === "TARDANZA") clase="tardanza";
-      else if(d.estado === "FALTA") clase="falta";
+// 🔊 sonido
+sonido.play();
 
-      html += `
-      <tr>
-        <td>${d.codigo}</td>
-        <td>${d.nombre}</td>
-        <td>${d.fecha}</td>
-        <td>${d.hora}</td>
-        <td class="${clase}">${d.estado}</td>
-      </tr>`;
-    });
+// 📳 vibración
+navigator.vibrate?.(200);
 
-    document.getElementById("tabla").innerHTML = html;
+fetch(API+"?codigo="+texto)
+.then(r=>r.json())
+.then(d=>{
 
-  })
-  .catch(err=>{
-    console.error(err);
-    alert("Error conectando con Apps Script");
-  });
+document.getElementById("nombre").innerHTML=d.nombre || "";
+document.getElementById("mensaje").innerHTML=d.mensaje || "";
+
+// 🎨 estado
+let estado=document.getElementById("estado");
+
+if(d.estado==="ASISTENCIA"){
+  estado.innerHTML="🟢 ASISTENCIA";
+  estado.style.color="#22c55e";
+}
+else if(d.estado==="TARDANZA"){
+  estado.innerHTML="🟡 TARDANZA";
+  estado.style.color="#facc15";
+}
+else if(d.estado==="FALTA"){
+  estado.innerHTML="🔴 FALTA";
+  estado.style.color="#ef4444";
+}
+else{
+  estado.innerHTML="⚠️ DUPLICADO";
+  estado.style.color="#f97316";
 }
 
-// 🔥 ACTUALIZA SOLO
-setInterval(cargar, 3000);
+// 🖼️ FOTO
+let foto=document.getElementById("foto");
 
-cargar();
+if(d.foto){
+  foto.src=d.foto;
+  foto.style.display="block";
+}else{
+  foto.style.display="none";
+}
+
+setTimeout(()=>bloqueado=false,3000);
+
+});
+
+}
+);
