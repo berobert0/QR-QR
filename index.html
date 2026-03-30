@@ -17,18 +17,20 @@ body{
 .header{
   background:#1e293b;
   padding:12px;
-  font-size:16px;
 }
+
+.header h2{margin:5px;}
+.header p{margin:2px;font-size:13px;color:#ccc}
 
 /* ESCÁNER */
 #reader{
-  width:280px;
+  width:260px;
   margin:15px auto;
   border-radius:12px;
   border:3px solid #22c55e;
 }
 
-/* PANEL */
+/* PANEL RESULTADO */
 .panel{
   background:#111827;
   margin:10px;
@@ -36,13 +38,14 @@ body{
   border-radius:12px;
 }
 
-/* FOTO */
+/* FOTO CENTRADA */
 .foto{
-  width:110px;
-  height:110px;
+  width:120px;
+  height:120px;
   border-radius:50%;
   object-fit:cover;
   border:3px solid #fff;
+  margin:auto;
   display:none;
 }
 
@@ -60,6 +63,7 @@ body{
 
 .mensaje{
   margin-top:5px;
+  color:#ccc;
 }
 </style>
 </head>
@@ -67,8 +71,10 @@ body{
 <body>
 
 <div class="header">
-📚 3ro C - CONTROL DE ASISTENCIA  
-<br>🕒 7:40 - 12:20
+  <h2>I.E. 5074 Alcides Spelucín Vega</h2>
+  <p>3ro C Primaria</p>
+  <p>👨‍🏫 Prof. Robert Egúsquiza C.</p>
+  <p>🕒 7:40 - 12:40</p>
 </div>
 
 <div id="reader"></div>
