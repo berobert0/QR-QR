@@ -1,12 +1,13 @@
-const API="https://script.google.com/macros/s/AKfycbzATWa2odLGXc8j_92SWX3RShyDXCyI8Nx8CqVl-LjU0MRrGPEqf-kGsrEIt8yEmgIuWg/exec";
+const API="https://script.google.com/macros/s/AKfycbwZKYugFQQjO6sb9MLSkMhETq4v-nHqgYzs45J4tRdYWW3AGIThbmW2TAPl1xv7X8z-SQ/exec";
 
 let bloqueado=false;
-
 let sonido;
 
+// activar audio al tocar pantalla
 document.body.addEventListener("click", ()=>{
-  sonido = new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=sharing");
+  sonido = new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=drive_link");
 });
+
 const qr=new Html5Qrcode("reader");
 
 qr.start(
@@ -17,13 +18,13 @@ qr.start(
 if(bloqueado) return;
 bloqueado=true;
 
-// 🔊 sonido
+// sonido
 if(sonido){
-  sonido.currentTime = 0;
+  sonido.currentTime=0;
   sonido.play().catch(()=>{});
 }
 
-// 📳 vibración
+// vibración
 if(navigator.vibrate){
   navigator.vibrate(200);
 }
@@ -35,7 +36,6 @@ fetch(API+"?codigo="+texto)
 document.getElementById("nombre").innerHTML=d.nombre || "";
 document.getElementById("mensaje").innerHTML=d.mensaje || "";
 
-// 🎨 estado
 let estado=document.getElementById("estado");
 
 if(d.estado==="ASISTENCIA"){
@@ -55,10 +55,10 @@ else{
   estado.style.color="#f97316";
 }
 
-// 🖼️ FOTO
+// FOTO CENTRADA
 let foto=document.getElementById("foto");
 
-if(d.foto){
+if(d.foto && d.foto.startsWith("http")){
   foto.src=d.foto;
   foto.style.display="block";
 }else{
