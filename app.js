@@ -2,8 +2,11 @@ const API="https://script.google.com/macros/s/AKfycbzATWa2odLGXc8j_92SWX3RShyDXC
 
 let bloqueado=false;
 
-const sonido=new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=sharing");
+let sonido;
 
+document.body.addEventListener("click", ()=>{
+  sonido = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+});
 const qr=new Html5Qrcode("reader");
 
 qr.start(
@@ -15,10 +18,15 @@ if(bloqueado) return;
 bloqueado=true;
 
 // 🔊 sonido
-sonido.play();
+if(sonido){
+  sonido.currentTime = 0;
+  sonido.play().catch(()=>{});
+}
 
 // 📳 vibración
-navigator.vibrate?.(200);
+if(navigator.vibrate){
+  navigator.vibrate(200);
+}
 
 fetch(API+"?codigo="+texto)
 .then(r=>r.json())
