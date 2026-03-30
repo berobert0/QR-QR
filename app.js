@@ -5,7 +5,7 @@ let bloqueado=false;
 let sonido;
 
 document.body.addEventListener("click", ()=>{
-  sonido = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+  sonido = new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=sharing");
 });
 const qr=new Html5Qrcode("reader");
 
