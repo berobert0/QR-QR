@@ -3,11 +3,12 @@ const API="https://script.google.com/macros/s/AKfycbwZKYugFQQjO6sb9MLSkMhETq4v-n
 let bloqueado=false;
 let sonido;
 
-// activar audio al tocar pantalla
+// 🔊 SONIDO (CORREGIDO)
 document.body.addEventListener("click", ()=>{
-  sonido = new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=drive_link");
+  sonido = new Audio("https://drive.google.com/file/d/1ech4VhO76WcQtg_yJH8zU-PIUCbQSqiv/view?usp=sharing");
 });
 
+// 📷 ESCÁNER QR
 const qr=new Html5Qrcode("reader");
 
 qr.start(
@@ -18,17 +19,18 @@ qr.start(
 if(bloqueado) return;
 bloqueado=true;
 
-// sonido
+// 🔊 sonido
 if(sonido){
   sonido.currentTime=0;
   sonido.play().catch(()=>{});
 }
 
-// vibración
+// 📳 vibración
 if(navigator.vibrate){
   navigator.vibrate(200);
 }
 
+// 🔍 consulta API
 fetch(API+"?codigo="+texto)
 .then(r=>r.json())
 .then(d=>{
@@ -55,18 +57,24 @@ else{
   estado.style.color="#f97316";
 }
 
-// FOTO CENTRADA
+// 🧑 FOTO
 let foto=document.getElementById("foto");
 
 if(d.foto && d.foto.startsWith("http")){
   foto.src=d.foto;
   foto.style.display="block";
 }else{
+  foto.src="";
   foto.style.display="none";
 }
 
+// 🔓 desbloqueo
 setTimeout(()=>bloqueado=false,3000);
 
+})
+.catch(()=>{
+  document.getElementById("mensaje").innerHTML="Error conexión";
+  bloqueado=false;
 });
 
 }
